@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine?</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #ffeef8;
+            text-align: center;
+            overflow: hidden; /* Prevents scrollbars during heart animation */
+        }
+
+        h1 {
+            color: #d63384;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            z-index: 10;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+            height: 100px;
+        }
+
+        button {
+            padding: 15px 35px;
+            font-size: 1.3rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        #yesBtn {
+            background-color: #ff4d6d;
+            color: white;
+        }
+
+        #yesBtn:hover {
+            transform: scale(1.1);
+            background-color: #ff758f;
+        }
+
+        #noBtn {
+            background-color: #6c757d;
+            color: white;
+            position: relative;
+        }
+
+        /* Heart Animation Styling */
+        .heart {
+            position: absolute;
+            top: -10%;
+            color: #ff4d6d;
+            font-size: 2rem;
+            user-select: none;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="content">
+        <h1>Will you be my Valentine? 💖</h1>
+        <div class="button-group">
+            <button id="yesBtn" onclick="celebrate()">Yes</button>
+            <button id="noBtn" onclick="moveButton()">No</button>
+        </div>
+    </div>
+
+    <script>
+        let clickCount = 0;
+        const noBtn = document.getElementById('noBtn');
+        const phrases = [
+            "No", 
+            "Are you sure?", 
+            "Really sure??", 
+            "Think again!", 
+            "Last chance...", 
+            "Fine, you win! 😉"
+        ];
+
+        function moveButton() {
+            if (clickCount < 5) {
+                // Move the button
+                const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+                const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+                
+                noBtn.style.position = 'fixed';
+                noBtn.style.left = x + 'px';
+                noBtn.style.top = y + 'px';
+
+                // Change the text
+                clickCount++;
+                noBtn.innerText = phrases[clickCount];
+
+                // Make the "Yes" button grow bigger as "No" is clicked!
+                const yesBtn = document.getElementById('yesBtn');
+                const currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
+                yesBtn.style.fontSize = (currentSize + 10) + 'px';
+                yesBtn.style.padding = (currentSize + 5) + 'px ' + (currentSize + 25) + 'px';
+            } else {
+                noBtn.style.position = 'static';
+            }
+        }
+
+        function celebrate() {
+            // Change the UI
+            document.getElementById('content').innerHTML = `
+                <h1 style="font-size: 4rem;">Yay! See you on the 14th! 🥰</h1>
+                <p style="font-size: 1.5rem; color: #ff4d6d;">(I knew you couldn't resist me)</p>
+            `;
+
+            // Start falling hearts
+            setInterval(createHeart, 300);
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            heart.style.opacity = Math.random();
+            document.body.appendChild(heart);
+
+            // Remove heart after it falls
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
